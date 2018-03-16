@@ -1,3 +1,4 @@
+import Char exposing (isDigit, isLower, isUpper)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
@@ -68,9 +69,27 @@ viewValidation : Model -> Html msg
 viewValidation model =
   let
     (color, message) =
-      if model.password == model.passwordAgain then
+      if not (isPasswordLengthValid model.password) then
+        ("red", "The password is too short")
+      else if not (passwordContainsDifferentCharacterClasses model.password) then
+        ("red", "The password needs to contain upper case, lower case, and numeric characters.")
+      else if model.password == model.passwordAgain then
         ("green", "OK")
       else
         ("red", "Passwords do not match!")
   in
     div [ style [("color", color)] ] [ text message ]
+
+isPasswordLengthValid : String -> Bool
+isPasswordLengthValid password =
+  String.length password >= 8
+
+passwordContainsDifferentCharacterClasses : String -> Bool
+passwordContainsDifferentCharacterClasses password =
+  let
+    charList = String.toList password
+    hasUpper = List.any Char.isUpper charList
+    hasLower = List.any Char.isLower charList
+    hasNumeric = List.any Char.isDigit charList
+  in
+    hasUpper && hasLower && hasNumeric
