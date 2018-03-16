@@ -1,4 +1,4 @@
-import Html exposing (Html, button, div, text)
+import Html exposing (Html, br, button, div, text)
 import Html.Events exposing (onClick)
 
 
@@ -28,13 +28,17 @@ model =
 
 
 type Msg
-  = Increment
+  = Reset
+  | Increment
   | Decrement
 
 
 update : Msg -> Model -> Model
 update msg model =
   case msg of
+    Reset ->
+      0
+
     Increment ->
       model + 1
 
@@ -52,4 +56,6 @@ view model =
     [ button [ onClick Decrement ] [ text "-" ]
     , div [] [ text (toString model) ]
     , button [ onClick Increment ] [ text "+" ]
+    , br [] []
+    , button [ onClick Reset ] [ text "reset" ]
     ]
